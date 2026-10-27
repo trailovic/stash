@@ -1,156 +1,116 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/core";
+  import Sidebar from "$lib/components/Sidebar.svelte";
+  import StorageSettings from "$lib/components/StorageSettings.svelte";
 
-  let name = $state("");
-  let greetMsg = $state("");
-
-  async function greet(event: Event) {
-    event.preventDefault();
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    greetMsg = await invoke("greet", { name });
-  }
+  let activeCollection = $state("All bookmarks");
 </script>
 
-<main class="container">
-  <h1>Welcome to Tauri + Svelte</h1>
+<svelte:head>
+  <title>Stash — Your personal library</title>
+  <meta
+    name="description"
+    content="A local-first bookmark library."
+  />
+</svelte:head>
 
-  <div class="row">
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo vite" alt="Vite Logo" />
-    </a>
-    <a href="https://tauri.app" target="_blank">
-      <img src="/tauri.svg" class="logo tauri" alt="Tauri Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank">
-      <img src="/svelte.svg" class="logo svelte-kit" alt="SvelteKit Logo" />
-    </a>
-  </div>
-  <p>Click on the Tauri, Vite, and SvelteKit logos to learn more.</p>
+<div
+  class="flex min-h-screen bg-stash-bg font-sans
+         text-stash-text"
+>
 
-  <form class="row" onsubmit={greet}>
-    <input id="greet-input" placeholder="Enter a name..." bind:value={name} />
-    <button type="submit">Greet</button>
-  </form>
-  <p>{greetMsg}</p>
-</main>
+  <Sidebar
+    {activeCollection}
+    onCollectionChange={(name) => (activeCollection = name)}
+  />
 
-<style>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
+  <main
+    class="min-w-0 flex-1 p-9
+           max-[650px]:px-4 max-[650px]:py-[22px]"
+  >
+    <!-- Toolbar -->
+    <header
+      class="flex items-center justify-between gap-5
+             max-[650px]:flex-col
+             max-[650px]:items-start"
+    >
+      <div>
+        <h2
+          class="mb-1.5 text-[25px] font-semibold
+                 tracking-tight"
+        >
+          {activeCollection}
+        </h2>
 
-.logo.svelte-kit:hover {
-  filter: drop-shadow(0 0 2em #ff3e00);
-}
+        <p class="text-sm text-stash-muted">
+          Your personal corner of the internet.
+        </p>
+      </div>
 
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+      <button
+        type="button"
+        disabled
+        title="Coming soon"
+        class="rounded-lg bg-stash-primary px-4 py-[11px]
+               font-semibold text-white opacity-65
+               disabled:cursor-not-allowed"
+      >
+        + Add bookmark
+      </button>
+    </header>
 
-  color: #0f0f0f;
-  background-color: #f6f6f6;
+    <!-- Search -->
+    <div class="mt-8">
+      <input
+        type="search"
+        placeholder="Search your library..."
+        aria-label="Search bookmarks"
+        disabled
+        class="w-full max-w-[480px] rounded-lg
+               border border-[#303139]
+               bg-stash-surface px-4 py-[13px]
+               text-stash-text placeholder:text-stash-muted
+               outline-none disabled:cursor-not-allowed
+               disabled:opacity-70"
+      />
+    </div>
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
+    <!-- Empty library -->
+    <section
+      class="mx-auto mt-[110px] flex max-w-[340px]
+             flex-col items-center text-center"
+    >
+      <div
+        class="mb-[22px] grid size-[70px]
+               place-items-center rounded-[18px]
+               bg-[#24212f] text-[42px]
+               text-stash-accent"
+        aria-hidden="true"
+      >
+        ◇
+      </div>
 
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
+      <h3
+        class="mb-2.5 text-xl font-semibold"
+      >
+        Your library is empty
+      </h3>
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
+      <p
+        class="text-sm leading-[1.7]
+               text-stash-muted"
+      >
+        Your saved websites, articles and discoveries
+        will appear here.
+      </p>
 
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  text-align: center;
-}
-
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
-
-  a:hover {
-    color: #24c8db;
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
-}
-
-</style>
+      <span
+        class="mt-3.5 text-xs text-stash-subtle"
+      >
+        Bookmark management is coming next.
+      </span>
+    </section>
+    <div class="mx-auto mt-12 max-w-[480px]">
+      <StorageSettings />
+    </div>
+  </main>
+</div>

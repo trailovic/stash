@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds */
+  --color-stash-bg: #101114;
+  --color-stash-sidebar: #17181c;
+  --color-stash-surface: #1b1c21;
+  --color-stash-hover: #24252c;
+  --color-stash-selected: #302b45;
+
+  /* Borders */
+  --color-stash-border: #2a2c32;
+
+  /* Typography */
+  --color-stash-text: #f4f4f5;
+  --color-stash-muted: #898b95;
+  --color-stash-subtle: #777985;
+
+  /* Brand */
+  --color-stash-primary: #7967d9;
+  --color-stash-accent: #9d8cff;
+  --color-stash-accent-light: #c4b8ff;
+
+  /* Status */
+  --color-stash-success: #58b88a;
+}
